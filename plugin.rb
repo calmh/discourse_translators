@@ -9,20 +9,20 @@ module ::GithubBadges
     return unless SiteSetting.github_badges_repo.present?
 
     # ensure badges exist
-    unless bronze = Badge.find_by(name: 'Contributor')
-      bronze = Badge.create!(name: 'Contributor',
+    unless bronze = Badge.find_by(name: 'Hacker')
+      bronze = Badge.create!(name: 'Hacker',
                              description: 'Contributed a commit',
                              badge_type_id: 3)
     end
 
-    unless silver = Badge.find_by(name: 'Great contributor')
-      silver = Badge.create!(name: 'Great contributor',
+    unless silver = Badge.find_by(name: 'Great Hacker')
+      silver = Badge.create!(name: 'Great Hacker',
                              description: 'Contributed 25 commits',
                              badge_type_id: 2)
     end
 
-    unless gold = Badge.find_by(name: 'Amazing contributor')
-      gold = Badge.create!(name: 'Amazing contributor',
+    unless gold = Badge.find_by(name: 'Amazing Hacker')
+      gold = Badge.create!(name: 'Amazing Hacker',
                              description: 'Contributed 250 commits',
                              badge_type_id: 1)
     end
