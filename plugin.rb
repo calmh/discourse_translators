@@ -7,25 +7,25 @@
 require 'json'
 
 module ::TransifexTranslators
+  def self.translators
+    url = URI.parse('http://www.transifex.com/api/2/project/' + SiteSetting.transifex_translators_project + '/languages/')
+    req = Net::HTTP::Get.new(url.to_s)
+    req.basic_auth SiteSetting.transifex_translators_user, SiteSetting.transifex_translators_pass
+    res = Net::HTTP.start(url.host, url.port) {|http|
+      http.request(req)
+    }
+    data = JSON.parse(res.body)
+
+    users = []
+    data.each do |lang|
+      users.concat lang['coordinators'] + lang['reviewers'] + lang['translators']
+    end
+    users.uniq
+  end
+
   def self.badge_grant!
 
     return unless SiteSetting.transifex_translators_project.present?
-
-    def translators
-      url = URI.parse('http://www.transifex.com/api/2/project/' + SiteSetting.transifex_translators_project + '/languages/')
-      req = Net::HTTP::Get.new(url.to_s)
-      req.basic_auth SiteSetting.transifex_translators_user, SiteSetting.transifex_translators_pass
-      res = Net::HTTP.start(url.host, url.port) {|http|
-        http.request(req)
-      }
-      data = JSON.parse(res.body)
-
-      users = []
-      data.each do |lang|
-        users << lang['coordinators'] + lang['reviewers'] + lang['translators']
-      end
-      users.uniq
-    end
 
     unless bronze = Badge.find_by(name: 'Translator')
       bronze = Badge.create!(name: 'Translator',
@@ -33,7 +33,7 @@ module ::TransifexTranslators
                              badge_type_id: 3)
     end
 
-    translators.each do |name|
+    self.translators.each do |name|
       user = User.find_by(username: name)
 
       if user
