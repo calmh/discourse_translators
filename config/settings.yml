@@ -1,3 +1,7 @@
-github_badges:
-  github_badges_repo:
+transifex_translators:
+  transifex_translators_project:
+    default: ''
+  transifex_translators_user:
+    default: ''
+  transifex_translators_pass:
     default: ''
